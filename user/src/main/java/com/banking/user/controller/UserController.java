@@ -5,6 +5,8 @@ import com.banking.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 @RequestMapping("/users")
@@ -28,9 +32,9 @@ public class UserController {
     }
 
     @GetMapping("/version")
-    public String getVersion() {
+    public ResponseEntity<String> getVersion() {
         log.info("The version is 1.");
-        return "1.0";
+        return new ResponseEntity("First Client Response", HttpStatus.OK);
     }
 
     @PostMapping
@@ -42,6 +46,13 @@ public class UserController {
     @GetMapping("/{id}")
     public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
+    }
+
+    @GetMapping("/by-email/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        log.info("Pointer coming into email section");
+        User user = userService.findUserByEmailId(email);
+        return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")

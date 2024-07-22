@@ -1,16 +1,15 @@
 package com.banking.user.service;
 
-import com.banking.user.repository.UserRepository;
 import com.banking.user.entity.User;
 import com.banking.user.exception.UserAlreadyExistsException;
 import com.banking.user.exception.UserNotFoundException;
+import com.banking.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -25,8 +24,8 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
-        if (existingUser.isPresent()) {
+        User existingUser = userRepository.findByEmail(user.getEmail());
+        if (existingUser != null) {
             log.error("User with email id {} already exist.",user.getEmail());
             throw new UserAlreadyExistsException("User with email " + user.getEmail() + " already exists.");
         }
@@ -55,5 +54,10 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public User findUserByEmailId(String emailId) {
+        log.info("Going to fetch data from user service for wrt email {}",emailId);
+        return userRepository.findByEmail(emailId);
     }
 }

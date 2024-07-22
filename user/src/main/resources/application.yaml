@@ -1,12 +1,12 @@
 spring:
   application:
-    name: user
+    name: user-service
   graphql:
     graphiql:
       enable: true
       path: /graphiql
   datasource:
-    url: jdbc:mysql://localhost:3306/ems?useSSL=false
+    url: jdbc:mysql://localhost:3306/ems
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
